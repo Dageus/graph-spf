@@ -2,12 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <iostream>
-#include <fstream>
 #include <bits/stdc++.h>
-#include <vector>
 using namespace std;
-
 
 // declare structs
 typedef struct Edge{
@@ -27,49 +23,15 @@ typedef struct Set{
     struct Set *parent;
 } *Set;
 
-typedef struct Node {
-    Edge edge;
-    struct Node *next;
-} *LinkedList;
-
 // declare global variables
 int V, E;
 Graph g;
 Edge *sortedEdges;
-LinkedList result;
-
-// data structure functions
-void initialize_linked_list(){
-    result->edge = NULL;
-    result->next = NULL; 
-}
+Edge *result;
 
 void alloc_vertices(){
     for (int i = 0; i < V; i++)
         g->vertices[i] = make_set(i + 1);
-}
-
-LinkedList new_edge(Edge e){
-    LinkedList new_edge = (LinkedList) malloc(sizeof(LinkedList));
-    new_edge->edge = e;
-    new_edge->next = NULL;
-    return new_edge;
-}
-
-void add_edge(Edge e){
-    if (result == NULL){
-        result = new_edge(e);
-        result->next == NULL;
-        return;
-    }
-    else{
-        if (result->next == NULL){
-            result->next = new_edge(e);
-            return;
-        }
-        else
-            add_edge(e);
-    }
 }
 
 // declare functions
@@ -79,6 +41,7 @@ void readInput(){
     g->vertices = (Set *) malloc(V * sizeof(Set));
     g->edges = (Edge *) malloc(E * sizeof(Edge));
     alloc_vertices();
+    result[V - 1];
 
     for(int i = 0; i < E; i++){
         int v1, v2, w;
@@ -141,8 +104,7 @@ Set link(Set u, Set v){
     if (u->rank > v->rank){
         v->parent = u;
         return v;
-    }
-    else{
+    } else{
         u->parent = v;
         if (u->rank == v->rank)
             v->rank++;
@@ -157,7 +119,6 @@ Set unite(Set u, Set v){
 
 // Kruskal algorithm
 void kruskal(){
-    initialize_linked_list();
     sortedEdges = (Edge *) malloc(E * sizeof(Edge));
     sortedEdges = g->edges;
     Edge aux[E];
@@ -165,16 +126,16 @@ void kruskal(){
     for (int i = 0; i < E; i++){
         Edge e = sortedEdges[i];
         if (find_set(e->u) != find_set(e->v)){
-            add_edge(e);
             // unite(e.u, e.v)
         }
     }
 }
 
 // sum weights
-int sumWeights(LinkedList result){
+int sumWeights(Edge *result){
     int sum = 0;
-    // make function
+    for (int i = 0; i < V - 1; i++)
+        sum += result[i]->weight;
     return sum;
 }
 
