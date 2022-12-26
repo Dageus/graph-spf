@@ -11,91 +11,171 @@ using namespace std;
 
 // declare structs
 typedef struct Edge{
-    int u;
-    int v;
+    Set u;
+    Set v;
     int weight;
-}Edge ;
+} *Edge;
 
 typedef struct Graph{
-    int *vertices;
+    Set *vertices;
     Edge *edges;
-} Graph;
+} *Graph;
 
-typedef struct Node{
-    int data; // see what data to put
-    struct Node *representative;
-    struct Node *next;
+typedef struct Set{
+    int vertice; 
+    int rank;
+    struct Set *parent;
 } *Set;
+
+typedef struct Node {
+    Edge edge;
+    struct Node *next;
+} *LinkedList;
 
 // declare global variables
 int V, E;
 Graph g;
+Edge *sortedEdges;
+LinkedList result;
+
+// data structure functions
+void initialize_linked_list(){
+    result->edge = NULL;
+    result->next = NULL; 
+}
+
+void alloc_vertices(){
+    for (int i = 0; i < V; i++)
+        g->vertices[i] = make_set(i + 1);
+}
+
+LinkedList new_edge(Edge e){
+    LinkedList new_edge = (LinkedList) malloc(sizeof(LinkedList));
+    new_edge->edge = e;
+    new_edge->next = NULL;
+    return new_edge;
+}
+
+void add_edge(Edge e){
+    if (result == NULL){
+        result = new_edge(e);
+        result->next == NULL;
+        return;
+    }
+    else{
+        if (result->next == NULL){
+            result->next = new_edge(e);
+            return;
+        }
+        else
+            add_edge(e);
+    }
+}
 
 // declare functions
 void readInput(){
     cin >> V;
     cin >> E;
-    g.vertices = (int *) malloc(V * sizeof(int));
-    g.edges = (Edge *) malloc(E * sizeof(Edge));
+    g->vertices = (Set *) malloc(V * sizeof(Set));
+    g->edges = (Edge *) malloc(E * sizeof(Edge));
+    alloc_vertices();
 
     for(int i = 0; i < E; i++){
-        int u, v, w;
-        cin >> u;
-        cin >> v;
+        int v1, v2, w;
+        cin >> v1;
+        cin >> v2;
         cin >> w;
-        g.edges[i].u = u;
-        g.edges[i].v = v;
-        g.edges[i].weight = w;
-        cout << "arco (" << u << ", " << v << ") com peso " << w << endl;
+        g->edges[i]->u = g->vertices[v1 - 1];
+        g->edges[i]->v = g->vertices[v2 - 1];
+        g->edges[i]->weight = w;
+        cout << "arco (" << v1 << ", " << v2 << ") com peso " << w << endl;
     }
+}
+
+void sort_edges(Edge *edges, int left, int right, Edge *aux){
+    int m = (left + right)/2;
+    if (right <= left)
+        return;
+    sort_edges(edges, left, m, aux);
+    sort_edges(edges, m + 1, right, aux);
+    merge(edges, left, m, right, aux);
 }
 
 // sort edges by weight
-Edge *sortEdges(Edge *edges){
-    Edge *sortedEdges = (Edge *) malloc(E * sizeof(Edge));
-    
-    //make function
+void merge(Edge *edges, int left, int m, int right, Edge *aux){
+    int i, j;
+    for (i = m + 1; i > left; i--)
+        aux[i - 1] == edges[i - 1];
+    for (j = m; j < right; j++)
+        aux[right + m - j] = edges[j + 1];
+    for (int k = left; k <= right; k++)
+        if (aux[j]->weight < aux[i]->weight || i == m + 1)
+            edges[k] = aux[j--];
+        else
+            edges[k] = aux[i--];
+}
 
-    return sortedEdges;
+bool compare_edges(Edge edge1, Edge edge2){
+    // make function
+    return NULL;
 }
 
 // find representative
-Node *find_representative(Node *x){
-    return x->representative;
+Set find_set(Set x){
+    if (x->vertice != x->parent->vertice)
+        x->parent = find_set(x->parent);
+    return x->parent;
 }
 
-// make-set
+// make set
 Set make_set(int x){
-    Set s = (Set ) malloc(sizeof(Set));
-    s->data = x;
-    s->representative = s;
-    s->next = NULL;
+    Set s = (Set) malloc(sizeof(Set));
+    s->vertice = x;
+    s->rank = 0;
+    s->parent = s;
     return s;
 }
 
+// link
+Set link(Set u, Set v){
+    if (u->rank > v->rank){
+        v->parent = u;
+        return v;
+    }
+    else{
+        u->parent = v;
+        if (u->rank == v->rank)
+            v->rank++;
+        return u;
+    }
+}   
+
 // union
-void unite(Set *u, Set *v){
-
-
+Set unite(Set u, Set v){
+    return link(find_set(u), find_set(v));
 }
 
 // Kruskal algorithm
-Set kruskal(){
-
-    Set A = NULL;
-    for (int i = 0; i <= V; i++)
-        make_set(g.vertices[i]);
-    Edge *sortedEdges = (Edge *) malloc(E * sizeof(Edge));
-    sortedEdges = sortEdges(g.edges);
+void kruskal(){
+    initialize_linked_list();
+    sortedEdges = (Edge *) malloc(E * sizeof(Edge));
+    sortedEdges = g->edges;
+    Edge aux[E];
+    sort_edges(sortedEdges, 0, E, aux);
     for (int i = 0; i < E; i++){
-        Edge e = sortedEdges[i]
-        if (find_representative(e.u) != find_representative(e.v)){
-            
+        Edge e = sortedEdges[i];
+        if (find_set(e->u) != find_set(e->v)){
+            add_edge(e);
             // unite(e.u, e.v)
         }
     }
+}
 
-    return A;
+// sum weights
+int sumWeights(LinkedList result){
+    int sum = 0;
+    // make function
+    return sum;
 }
 
 
@@ -104,9 +184,9 @@ int main() {
     
     readInput();
 
-    Set MST = kruskal();
+    kruskal();
 
-    cout << "MST: " << sumWeights(MST) <<endl;
+    cout << "result: " << sumWeights(result) <<endl;
 
     return 0;
 }
