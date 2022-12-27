@@ -49,13 +49,16 @@ void readInput(){
     cin >> V;
     cin >> E;
     cout << "read V and E\n";
-    *g.vertices = new Set[V];
+    g.vertices = new Set*[V];
     cout << "alloc vertices\n";
     g.edges = new Edge[E];
     cout << "alloc edges\n";
     alloc_vertices();
+    cout << "alloc individual vertices\n";
     result = new Edge[V - 1];
+    cout << "alloc result\n";
 
+    cout << "read edges\n";
     for(int i = 0; i < E; i++){
         int v1, v2, w;
         cin >> v1;
@@ -64,7 +67,7 @@ void readInput(){
         g.edges[i].u = g.vertices[v1 - 1];
         g.edges[i].v = g.vertices[v2 - 1];
         g.edges[i].weight = w;
-        cout << "arco (" << v1 << ", " << v2 << ") com peso " << w << endl;
+        cout << "arco (" << g.edges[i].u->vertice << ", " << g.edges[i].v->vertice << ") com peso " << w << endl;
     }
 }
 
