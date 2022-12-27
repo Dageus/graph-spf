@@ -48,8 +48,11 @@ void alloc_vertices(){
 void readInput(){
     cin >> V;
     cin >> E;
+    cout << "read V and E\n";
     *g.vertices = new Set[V];
+    cout << "alloc vertices\n";
     g.edges = new Edge[E];
+    cout << "alloc edges\n";
     alloc_vertices();
     result = new Edge[V - 1];
 
@@ -69,12 +72,14 @@ void sort_edges(Edge *edges, int left, int right, Edge *aux){
     int m = (left + right)/2;
     if (right <= left)
         return;
+    cout << "sort edges\n";
     sort_edges(edges, left, m, aux);
     sort_edges(edges, m + 1, right, aux);
-    merge(edges, left, m, right, aux);
+    //merge(edges, left, m, right, aux);
 }
 
 // sort edges by weight
+/*
 void merge(Edge *edges, int left, int m, int right, Edge *aux){
     int i, j;
     for (i = m + 1; i > left; i--)
@@ -86,7 +91,7 @@ void merge(Edge *edges, int left, int m, int right, Edge *aux){
             edges[k] = aux[j--];
         else
             edges[k] = aux[i--];
-}
+}*/
 
 // find representative
 Set* find_set(Set* x){
