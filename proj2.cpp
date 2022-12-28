@@ -131,7 +131,6 @@ Set* unite(int index){
 // Kruskal algorithm
 void kruskal(){
     sort_edges(g.edges, 0, E - 1);
-    cout << "------" << endl;
     for (int i = 0; i < E; i++){
         if (find_set(g.edges[i].u) != find_set(g.edges[i].v)){ // compare sets
             result += g.edges[i].weight; // add edge to result
