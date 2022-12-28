@@ -88,7 +88,7 @@ void merge_arrays(Edge *edges, int left, int m, int right){
         aux[right + m - j] = edges[j + 1];
     }
     for (int k = left; k <= right; k++)
-        if (aux[j].weight < aux[i].weight || i == m + 1)
+        if (aux[j].weight > aux[i].weight || i == m + 1)
             edges[k] = aux[j--];
         else
             edges[k] = aux[i++];
@@ -146,15 +146,6 @@ void kruskal(){
             unite(i);
         }
     }
-}
-
-// sum weights
-int sumWeights(vector<Edge> result){
-    int sum = 0;
-    for (int i = 0; i < V - 1; i++){
-        sum += result[i].weight;
-    }
-    return sum;
 }
 
 
