@@ -128,21 +128,13 @@ Set* unite(int index){
     return link(find_set(g.edges[index].u), find_set(g.edges[index].v));
 }
 
-void print_edges(Edge *edges){
-    for (int i = 0; i < E; i++){
-        cout << "arco (" << edges[i].u->vertice << ", " << edges[i].v->vertice << ") com peso " << edges[i].weight << endl;
-    }
-}
-
 // Kruskal algorithm
 void kruskal(){
     sort_edges(g.edges, 0, E - 1);
-    print_edges(g.edges);
     cout << "------" << endl;
     for (int i = 0; i < E; i++){
         if (find_set(g.edges[i].u) != find_set(g.edges[i].v)){ // compare sets
             result += g.edges[i].weight; // add edge to result
-            cout << result << endl;
             unite(i);
         }
     }
