@@ -108,7 +108,7 @@ void sort_edges(Edge *edges, int left, int right){
 
 // find representative
 Set* find_set(Set* x){
-    if (x->vertice != (x->parent->vertice))
+    if (x != x->parent)
         x->parent = find_set(x->parent);
     return (x->parent);
 }
@@ -139,10 +139,12 @@ void print_edges(Edge *edges){
 
 // Kruskal algorithm
 void kruskal(){
+    cout << "kruskal" << endl;
     sortedEdges = new Edge[E];
     sortedEdges = g.edges;
     print_edges(sortedEdges);
     sort_edges(sortedEdges, 0, E);
+    print_edges(sortedEdges);
     for (int i = 0; i < E; i++){
         Edge e = sortedEdges[i];
         cout << "arco (" << e.u->vertice << ", " << e.v->vertice << ") com peso " << e.weight << endl;
