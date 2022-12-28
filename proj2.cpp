@@ -1,10 +1,7 @@
 //include the header files
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <iostream>
 #include <bits/stdc++.h>
-#include <vector>
 using namespace std;
 
 // declare structs
