@@ -4,6 +4,7 @@
 #include <string.h>
 #include <iostream>
 #include <bits/stdc++.h>
+#include <vector>
 using namespace std;
 
 // declare structs
@@ -28,7 +29,7 @@ typedef struct Graph{
 int V, E;
 Graph g;
 Edge *sortedEdges;
-Edge *result;
+vector<Edge> result;
 
 // make set
 Set* make_set(int x){
@@ -48,17 +49,11 @@ void alloc_vertices(){
 void readInput(){
     cin >> V;
     cin >> E;
-    cout << "read V and E\n";
     g.vertices = new Set*[V];
-    cout << "alloc vertices\n";
     g.edges = new Edge[E];
-    cout << "alloc edges\n";
     alloc_vertices();
-    cout << "alloc individual vertices\n";
-    result = new Edge[V - 1];
-    cout << "alloc result\n";
+    result = vector<Edge>(V - 1);
 
-    cout << "read edges\n";
     for(int i = 0; i < E; i++){
         int v1, v2, w;
         cin >> v1;
@@ -75,7 +70,6 @@ void sort_edges(Edge *edges, int left, int right, Edge *aux){
     int m = (left + right)/2;
     if (right <= left)
         return;
-    cout << "sort edges\n";
     sort_edges(edges, left, m, aux);
     sort_edges(edges, m + 1, right, aux);
     //merge(edges, left, m, right, aux);
@@ -130,14 +124,16 @@ void kruskal(){
     sort_edges(sortedEdges, 0, E, aux);
     for (int i = 0; i < E; i++){
         Edge e = sortedEdges[i];
+        cout << "arco (" << e.u->vertice << ", " << e.v->vertice << ") com peso " << e.weight << endl;
         if (find_set(e.u) != find_set(e.v)){ // compare sets
-            // unite(e.u, e.v)
+            result.push_back(e); // add edge to result
+            unite(e.u, e.v);
         }
     }
 }
 
 // sum weights
-int sumWeights(Edge *result){
+int sumWeights(vector<Edge> result){
     int sum = 0;
     for (int i = 0; i < V - 1; i++)
         sum += result[i].weight;
