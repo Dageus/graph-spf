@@ -31,8 +31,7 @@ int V, E;
 Graph g;
 Edge *sortedEdges;
 Edge* aux;
-vector<Edge> result;
-int counter = 0;
+int result = 0;
 
 //declare functions
 void readInput();
@@ -44,7 +43,6 @@ Set* link(Set* u, Set* v);
 Set* unite(Set* u, Set* v);
 void print_edges(Edge *edges);
 void kruskal();
-int sumWeights(vector<Edge> result);
 
 // make set
 Set* make_set(int x){
@@ -68,7 +66,6 @@ void readInput(){
     g.edges = new Edge[E];
     aux = new Edge[E];
     alloc_vertices();
-    result = vector<Edge>(V - 1);
 
     for(int i = 0; i < E; i++){
         int v1, v2, w;
@@ -127,8 +124,8 @@ Set* link(Set* u, Set* v){
 }   
 
 // union
-Set* unite(Set* u, Set* v){
-    return link(find_set(u), find_set(v));
+Set* unite(int index){
+    return link(find_set(g.edges[index].u), find_set(g.edges[index].v));
 }
 
 void print_edges(Edge *edges){
@@ -139,18 +136,14 @@ void print_edges(Edge *edges){
 
 // Kruskal algorithm
 void kruskal(){
-    sortedEdges = new Edge[E];
-    sortedEdges = g.edges;
-    cout << "sorted" << endl;
-    sort_edges(sortedEdges, 0, E - 1);
-    print_edges(sortedEdges);
+    sort_edges(g.edges, 0, E - 1);
+    print_edges(g.edges);
     cout << "------" << endl;
     for (int i = 0; i < E; i++){
-        Edge e = sortedEdges[i];
-        if (find_set(e.u) != find_set(e.v)){ // compare sets
-            result[counter] = e; // add edge to result
-            counter++;
-            unite(e.u, e.v);
+        if (find_set(g.edges[i].u) != find_set(g.edges[i].v)){ // compare sets
+            result += g.edges[i].weight; // add edge to result
+            cout << result << endl;
+            unite(i);
         }
     }
 }
@@ -172,7 +165,7 @@ int main() {
 
     kruskal();
 
-    cout << sumWeights(result) <<endl;
+    cout << result <<endl;
 
     return 0;
 }
