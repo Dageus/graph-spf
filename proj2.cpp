@@ -25,11 +25,26 @@ typedef struct Graph{
     Edge *edges;
 } Graph;
 
+
 // declare global variables
 int V, E;
 Graph g;
 Edge *sortedEdges;
+Edge* aux;
 vector<Edge> result;
+int counter = 0;
+
+//declare functions
+void readInput();
+void alloc_vertices();
+void sort_edges(Edge *edges, int left, int right);
+void merge_arrays(Edge *edges, int left, int m, int right);
+Set* find_set(Set* x);
+Set* link(Set* u, Set* v);
+Set* unite(Set* u, Set* v);
+void print_edges(Edge *edges);
+void kruskal();
+int sumWeights(vector<Edge> result);
 
 // make set
 Set* make_set(int x){
@@ -51,6 +66,7 @@ void readInput(){
     cin >> E;
     g.vertices = new Set*[V];
     g.edges = new Edge[E];
+    aux = new Edge[E];
     alloc_vertices();
     result = vector<Edge>(V - 1);
 
@@ -66,18 +82,9 @@ void readInput(){
     }
 }
 
-void sort_edges(Edge *edges, int left, int right, Edge *aux){
-    int m = (left + right)/2;
-    if (right <= left)
-        return;
-    sort_edges(edges, left, m, aux);
-    sort_edges(edges, m + 1, right, aux);
-    //merge(edges, left, m, right, aux);
-}
-
 // sort edges by weight
-/*
-void merge(Edge *edges, int left, int m, int right, Edge *aux){
+void merge_arrays(Edge *edges, int left, int m, int right){
+    cout << "merge" << endl;
     int i, j;
     for (i = m + 1; i > left; i--)
         aux[i - 1] = edges[i - 1];
@@ -88,11 +95,19 @@ void merge(Edge *edges, int left, int m, int right, Edge *aux){
             edges[k] = aux[j--];
         else
             edges[k] = aux[i--];
-}*/
+}
+
+void sort_edges(Edge *edges, int left, int right){
+    int m = (left + right)/2;
+    if (right <= left)
+        return;
+    sort_edges(edges, left, m);
+    sort_edges(edges, m + 1, right);
+    merge_arrays(edges, left, m, right);
+}
 
 // find representative
 Set* find_set(Set* x){
-
     if (x->vertice != (x->parent->vertice))
         x->parent = find_set(x->parent);
     return (x->parent);
@@ -116,17 +131,27 @@ Set* unite(Set* u, Set* v){
     return link(find_set(u), find_set(v));
 }
 
+void print_edges(Edge *edges){
+    for (int i = 0; i < E; i++){
+        cout << "arco (" << edges[i].u->vertice << ", " << edges[i].v->vertice << ") com peso " << edges[i].weight << endl;
+    }
+}
+
 // Kruskal algorithm
 void kruskal(){
     sortedEdges = new Edge[E];
     sortedEdges = g.edges;
-    Edge aux[E];
-    sort_edges(sortedEdges, 0, E, aux);
+    print_edges(sortedEdges);
+    sort_edges(sortedEdges, 0, E);
     for (int i = 0; i < E; i++){
         Edge e = sortedEdges[i];
         cout << "arco (" << e.u->vertice << ", " << e.v->vertice << ") com peso " << e.weight << endl;
         if (find_set(e.u) != find_set(e.v)){ // compare sets
-            result.push_back(e); // add edge to result
+            cout << "representante de u: " << find_set(e.u)->vertice << endl;
+            cout << "representante de v: " << find_set(e.v)->vertice << endl;
+            result[counter] = e; // add edge to result
+            cout << result[counter].weight << endl;
+            counter++;
             unite(e.u, e.v);
         }
     }
@@ -135,8 +160,11 @@ void kruskal(){
 // sum weights
 int sumWeights(vector<Edge> result){
     int sum = 0;
-    for (int i = 0; i < V - 1; i++)
+    for (int i = 0; i < V - 1; i++){
         sum += result[i].weight;
+        cout << result[i].weight << endl;
+    }
+    cout << "soma: ";
     return sum;
 }
 
@@ -148,7 +176,7 @@ int main() {
 
     kruskal();
 
-    cout << "result: " << sumWeights(result) <<endl;
+    cout << sumWeights(result) <<endl;
 
     return 0;
 }
