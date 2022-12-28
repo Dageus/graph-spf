@@ -78,23 +78,23 @@ void readInput(){
         g.edges[i].u = g.vertices[v1 - 1];
         g.edges[i].v = g.vertices[v2 - 1];
         g.edges[i].weight = w;
-        cout << "arco (" << g.edges[i].u->vertice << ", " << g.edges[i].v->vertice << ") com peso " << w << endl;
-    }
+        }
 }
 
 // sort edges by weight
 void merge_arrays(Edge *edges, int left, int m, int right){
-    cout << "merge" << endl;
     int i, j;
-    for (i = m + 1; i > left; i--)
+    for (i = m + 1; i > left; i--){
         aux[i - 1] = edges[i - 1];
-    for (j = m; j < right; j++)
+    }
+    for (j = m; j < right; j++){
         aux[right + m - j] = edges[j + 1];
+    }
     for (int k = left; k <= right; k++)
         if (aux[j].weight < aux[i].weight || i == m + 1)
             edges[k] = aux[j--];
         else
-            edges[k] = aux[i--];
+            edges[k] = aux[i++];
 }
 
 void sort_edges(Edge *edges, int left, int right){
@@ -139,20 +139,16 @@ void print_edges(Edge *edges){
 
 // Kruskal algorithm
 void kruskal(){
-    cout << "kruskal" << endl;
     sortedEdges = new Edge[E];
     sortedEdges = g.edges;
+    cout << "sorted" << endl;
+    sort_edges(sortedEdges, 0, E - 1);
     print_edges(sortedEdges);
-    sort_edges(sortedEdges, 0, E);
-    print_edges(sortedEdges);
+    cout << "------" << endl;
     for (int i = 0; i < E; i++){
         Edge e = sortedEdges[i];
-        cout << "arco (" << e.u->vertice << ", " << e.v->vertice << ") com peso " << e.weight << endl;
         if (find_set(e.u) != find_set(e.v)){ // compare sets
-            cout << "representante de u: " << find_set(e.u)->vertice << endl;
-            cout << "representante de v: " << find_set(e.v)->vertice << endl;
             result[counter] = e; // add edge to result
-            cout << result[counter].weight << endl;
             counter++;
             unite(e.u, e.v);
         }
@@ -164,9 +160,7 @@ int sumWeights(vector<Edge> result){
     int sum = 0;
     for (int i = 0; i < V - 1; i++){
         sum += result[i].weight;
-        cout << result[i].weight << endl;
     }
-    cout << "soma: ";
     return sum;
 }
 
