@@ -30,19 +30,8 @@ typedef struct Graph{
 int V, E;
 Graph g;
 Edge *sortedEdges;
-Edge* aux;
+Edge *aux;
 int result = 0;
-
-//declare functions
-void readInput();
-void alloc_vertices();
-void sort_edges(Edge *edges, int left, int right);
-void merge_arrays(Edge *edges, int left, int m, int right);
-Set* find_set(Set* x);
-Set* link(Set* u, Set* v);
-Set* unite(Set* u, Set* v);
-void print_edges(Edge *edges);
-void kruskal();
 
 // make set
 Set* make_set(int x){
@@ -104,14 +93,14 @@ void sort_edges(Edge *edges, int left, int right){
 }
 
 // find representative
-Set* find_set(Set* x){
+Set* kruskal_find_set(Set* x){
     if (x != x->parent)
-        x->parent = find_set(x->parent);
+        x->parent = kruskal_find_set(x->parent);
     return (x->parent);
 }
 
 // link
-Set* link(Set* u, Set* v){
+Set* kruskal_link(Set* u, Set* v){
     if (u->rank > v->rank){
         v->parent = u;
         return v;
@@ -124,17 +113,17 @@ Set* link(Set* u, Set* v){
 }   
 
 // union
-Set* unite(int index){
-    return link(find_set(g.edges[index].u), find_set(g.edges[index].v));
+Set* kruskal_unite(int index){
+    return kruskal_link(kruskal_find_set(g.edges[index].u), kruskal_find_set(g.edges[index].v));
 }
 
 // Kruskal algorithm
 void kruskal(){
     sort_edges(g.edges, 0, E - 1);
     for (int i = 0; i < E; i++){
-        if (find_set(g.edges[i].u) != find_set(g.edges[i].v)){ // compare sets
+        if (kruskal_find_set(g.edges[i].u) != kruskal_find_set(g.edges[i].v)){ // compare sets
             result += g.edges[i].weight; // add edge to result
-            unite(i);
+            kruskal_unite(i);
         }
     }
 }
@@ -147,7 +136,7 @@ int main() {
 
     kruskal();
 
-    cout << result <<endl;
+    cout << result << endl;
 
     return 0;
 }
