@@ -46,8 +46,8 @@ void alloc_vertices(){
 
 // declare functions
 void readInput(){
-    cin >> V;
-    cin >> E;
+    scanf("%d", &V);
+    scanf("%d", &E);
     g.vertices = new Set*[V];
     g.edges = new Edge[E];
     aux = new Edge[E];
@@ -55,9 +55,9 @@ void readInput(){
 
     for(int i = 0; i < E; i++){
         int v1, v2, w;
-        cin >> v1;
-        cin >> v2;
-        cin >> w;
+        scanf("%d", &v1);
+        scanf("%d", &v2);
+        scanf("%d", &w);
         g.edges[i].u = g.vertices[v1 - 1];
         g.edges[i].v = g.vertices[v2 - 1];
         g.edges[i].weight = w;
